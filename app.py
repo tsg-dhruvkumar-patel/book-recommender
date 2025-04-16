@@ -20,6 +20,11 @@ except Exception as e:
 # Load and preprocess the data
 @st.cache_data
 def load_data():
+    """
+    Loads and preprocesses the book dataset from 'books.csv' for use in the recommender system.
+    
+    Checks for the existence of the CSV file and required columns ('title', 'authors', 'description'). Combines these columns into a single 'combined_features' text field, removes rows with empty combined features, and returns the cleaned DataFrame. Displays error messages and returns None if the file is missing, required columns are absent, or an exception occurs.
+    """
     try:
         # Check if file exists
         if not os.path.exists('books.csv'):
@@ -66,6 +71,12 @@ def load_data():
         return None
 
 def preprocess_text(text):
+    """
+    Cleans and tokenizes input text by lowercasing, removing special characters, and filtering out English stopwords.
+    
+    Returns:
+        A processed string containing only alphanumeric, non-stopword tokens separated by spaces. Returns an empty string if input is not a string.
+    """
     if not isinstance(text, str):
         return ""
     # Convert to lowercase
@@ -80,6 +91,20 @@ def preprocess_text(text):
     return ' '.join(tokens)
 
 def get_recommendations(user_input, books_df, vectorizer, tfidf_matrix):
+    """
+    Generates a list of recommended books based on user input using text similarity.
+    
+    The function preprocesses the user's input, transforms it into a TF-IDF vector, and computes cosine similarity with the dataset's book features. It returns the top five most similar books as a list of dictionaries containing title, authors, description, and similarity score.
+    
+    Args:
+        user_input: A string describing the user's book preferences.
+        books_df: DataFrame containing book information and combined features.
+        vectorizer: Fitted TF-IDF vectorizer for transforming text.
+        tfidf_matrix: TF-IDF matrix of the dataset's combined features.
+    
+    Returns:
+        A list of up to five dictionaries, each representing a recommended book with its title, authors, description, and similarity score. Returns an empty list if an error occurs.
+    """
     try:
         # Preprocess user input
         processed_input = preprocess_text(user_input)
@@ -109,6 +134,11 @@ def get_recommendations(user_input, books_df, vectorizer, tfidf_matrix):
         return []
 
 def main():
+    """
+    Runs the Streamlit application for interactive book recommendations.
+    
+    Sets up the user interface, loads and preprocesses the book dataset, and handles user input to generate and display book recommendations based on textual preferences.
+    """
     st.title("Book Recommender System")
     st.write("Enter your preferences or describe what kind of book you're looking for:")
     
