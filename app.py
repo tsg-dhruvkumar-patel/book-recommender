@@ -91,7 +91,7 @@ def get_recommendations(user_input, books_df, vectorizer, tfidf_matrix):
         similarity_scores = cosine_similarity(input_vector, tfidf_matrix).flatten()
         
         # Get top 5 recommendations
-        top_indices = similarity_scores.argsort()[-6:-1][::-1]
+        top_indices = similarity_scores.argsort()[-5:][::-1]
         
         recommendations = []
         for idx in top_indices:
